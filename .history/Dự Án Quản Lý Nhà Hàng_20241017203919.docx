@@ -1,0 +1,89 @@
+Requirement Outline cho Dự Án Quản Lý Nhà Hàng
+1. Tổng Quan Dự Án: Dự án quản lý nhà hàng giúp tự động hóa các hoạt động của nhà hàng như quản lý đặt bàn, quản lý thực đơn, thanh toán và xử lý yêu cầu từ khách hàng. Hệ thống có sự phân chia chức năng rõ ràng giữa khách hàng, nhân viên phục vụ, quản lý, và bếp. Mã nguồn sử dụng PHP, MySQL, và Bootstrap để phát triển giao diện web và backend.
+
+2. Các Chức Năng Chính:
+2.1 Quản Lý Đặt Bàn:
+Đặt Bàn Trực Tuyến:
+
+Khách hàng có thể đặt bàn thông qua trang web, chọn thời gian và ngày đặt trước.
+Kiểm tra tình trạng sẵn có của bàn trước khi đặt.
+Khách hàng có thể nhập các yêu cầu đặc biệt khi đặt bàn.
+Hệ thống sẽ tạo một "phiếu đặt bàn" sau khi xác nhận thành công, cung cấp cho khách hàng chi tiết về bàn và thời gian đã đặt.
+Xác Nhận và Kiểm Tra Bàn Trống:
+
+Hệ thống kiểm tra xem bàn đã được đặt vào thời gian cụ thể chưa và hiển thị danh sách các bàn trống có sẵn.
+Nếu không có bàn trống, khách hàng sẽ được thông báo và gợi ý các thời gian khác.
+Quản Lý Tình Trạng Bàn:
+
+Theo dõi tình trạng bàn: có thể đặt trước, đang được sử dụng, hay bàn trống.
+Hệ thống lưu trữ thông tin về sức chứa của từng bàn để phân chia hợp lý.
+2.2 Quản Lý Thực Đơn:
+Thực Đơn Nhà Hàng:
+
+Hệ thống quản lý các món ăn và đồ uống, phân chia theo các loại như Món Chính, Món Phụ, Đồ Uống, Đồ Tráng Miệng.
+Giá của từng món được hiển thị kèm theo mô tả ngắn gọn về món ăn.
+Quản Lý Thực Đơn:
+
+Quản lý có thể thêm, sửa, hoặc xóa các món trong thực đơn thông qua giao diện quản trị.
+Cập nhật giá và mô tả món ăn, đảm bảo thực đơn luôn đúng và đầy đủ thông tin.
+2.3 Thanh Toán và Hóa Đơn:
+Thanh Toán:
+
+Hỗ trợ thanh toán bằng thẻ (Card) và tiền mặt.
+Lưu trữ thông tin thanh toán bao gồm tên người sở hữu thẻ, số thẻ, ngày hết hạn, và mã bảo mật (CVV).
+Quản lý có thể xem lịch sử thanh toán và hóa đơn của từng khách hàng.
+In Hóa Đơn:
+
+Sau khi khách hàng hoàn thành bữa ăn, hóa đơn sẽ được tạo, bao gồm chi tiết các món đã gọi và tổng số tiền thanh toán.
+Hệ thống tự động liên kết thông tin hóa đơn với khách hàng và bàn đã đặt.
+2.4 Quản Lý Nhân Viên và Tài Khoản:
+Quản Lý Nhân Viên:
+Hệ thống phân quyền cho các nhân viên với các vai trò như Nhân Viên Phục Vụ, Quản Lý, và Đầu Bếp.
+Nhân viên có thể xem danh sách các bàn đã đặt, các món ăn đã đặt, và quản lý việc phục vụ khách hàng.
+Quản Lý Tài Khoản:
+Khách hàng và nhân viên có thể đăng ký và đăng nhập vào hệ thống.
+Tài khoản khách hàng bao gồm thông tin email, số điện thoại và mật khẩu.
+Tài khoản nhân viên bao gồm tên nhân viên, vai trò, và tài khoản liên kết.
+2.5 Quản Lý Bếp:
+Xử Lý Yêu Cầu Món Ăn:
+Khi khách hàng gọi món, yêu cầu sẽ được chuyển trực tiếp đến bếp để bắt đầu chuẩn bị món ăn.
+Mỗi món ăn sẽ có thời gian bắt đầu và kết thúc chuẩn bị.
+Đầu bếp có thể cập nhật trạng thái món ăn (đang chuẩn bị, đã hoàn thành).
+3. Chức Năng Nâng Cao:
+3.1 Quản Lý Thành Viên và Điểm Tích Lũy:
+Chương Trình Thành Viên:
+
+Hệ thống có tính năng thành viên, cho phép khách hàng tích lũy điểm sau mỗi lần sử dụng dịch vụ.
+Thành viên có thể sử dụng điểm để nhận ưu đãi hoặc giảm giá khi đặt bàn hay thanh toán.
+Quản Lý Điểm Thành Viên:
+
+Quản lý có thể xem và chỉnh sửa điểm của thành viên dựa trên hoạt động của họ tại nhà hàng.
+Khách hàng có thể xem số điểm của mình thông qua hồ sơ cá nhân.
+4. Cơ Sở Dữ Liệu (Database):
+Cấu Trúc Bảng Dữ Liệu:
+Hệ thống sử dụng cơ sở dữ liệu MySQL để lưu trữ thông tin về khách hàng, bàn ăn, thực đơn, nhân viên, thành viên, và hóa đơn.
+Các bảng dữ liệu chính:
+Menu: Quản lý thực đơn.
+Accounts: Quản lý tài khoản khách hàng và nhân viên.
+Staffs: Quản lý thông tin nhân viên.
+Memberships: Quản lý thông tin thành viên và điểm tích lũy.
+Reservations: Quản lý thông tin đặt bàn của khách hàng.
+Bills: Quản lý hóa đơn thanh toán.
+Bill_Items: Quản lý chi tiết hóa đơn (các món ăn đã gọi).
+Kitchen: Theo dõi các món ăn được đầu bếp chuẩn bị.
+5. Giao Diện Người Dùng:
+Trang Đặt Bàn:
+
+Giao diện thân thiện cho phép khách hàng chọn ngày, giờ và số lượng người, sau đó hệ thống sẽ kiểm tra bàn trống và tiến hành đặt bàn.
+Trang Quản Lý Thực Đơn:
+
+Hiển thị danh sách các món ăn và đồ uống theo danh mục.
+Khách hàng có thể xem và chọn món từ thực đơn.
+Trang Quản Lý Nhân Viên:
+
+Nhân viên có thể xem các yêu cầu đặt bàn, quản lý tình trạng bàn và tiến trình phục vụ.
+6. Bảo Mật và Xác Thực:
+Mã Hóa Mật Khẩu:
+Mật khẩu của người dùng được mã hóa (hash) để đảm bảo tính bảo mật.
+Xác Thực Đăng Nhập:
+Hệ thống yêu cầu khách hàng và nhân viên đăng nhập trước khi truy cập vào các tính năng quản lý.

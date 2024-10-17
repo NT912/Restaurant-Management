@@ -1,0 +1,32 @@
+body {
+  font-family: Arial, sans-serif;
+}
+
+header {
+  background-color: #333;
+  color: white;
+  padding: 10px;
+  text-align: center;
+}
+
+nav ul {
+  list-style-type: none;
+}
+
+nav ul li {
+  display: inline;
+  margin: 0 10px;
+}
+
+nav ul li a {
+  color: white;
+  text-decoration: none;
+}
+
+#hero {
+  background: url("../image/restaurant.jpg") no-repeat center center;
+  background-size: cover;
+  height: 300px;
+  text-align: center;
+  color: white;
+}
