@@ -1,8 +1,8 @@
 const bcrypt = require("bcrypt");
-const User = require("../models/userModel");
+const StaffModel = require("../models/staffModel");
 
-// Signup function
-exports.signup = (req, res) => {
+const authController = {
+  signup: async(req, res) => {
   const { email, password, phone_number } = req.body;
 
   User.findByEmail(email, (err, user) => {
@@ -22,20 +22,43 @@ exports.signup = (req, res) => {
       });
     });
   });
-};
+},
 
-// Login function
-exports.login = (req, res) => {
-  const { email, password } = req.body;
+getlogin: (req, res) => {
+  const userSession = req.session.user;
+  if (userSession) {
+    return res.render('dashboard', { title: "Dashboard" });
+  }
 
-  User.findByEmail(email, (err, user) => {
-    if (!user.length)
+  res.render("login/login", { title: "Dashboard" });
+},
+
+login: async (req, res) => {
+  const { userName, password } = req.body;
+
+  try {
+    const user = await StaffModel.findByUserName(userName);
+
+    if (!user) {
       return res.status(404).json({ message: "User not found" });
+    }
 
-    bcrypt.compare(password, user[0].password, (err, isMatch) => {
-      if (!isMatch)
-        return res.status(400).json({ message: "Invalid password" });
-      res.status(200).json({ message: "Login successful", user: user[0] });
-    });
-  });
+    if (password !== user.Password) {
+      return res.status(400).json({ message: "Invalid password" });
+    }
+
+    req.session.user = {
+      id: user.StaffID,
+      userName: user.Name
+    };
+
+    res.status(200).json({ message: "Login successful", user });
+
+    } catch (error) {
+      console.error('Error during login:', error);
+      res.status(500).json({ message: "Server error", error });
+    }
+  }
 };
+
+module.exports = authController;

@@ -7,7 +7,7 @@
         <meta name="description" content="" />
         <meta name="author" content="" />
         <title>Dashboard - SB Admin</title>
-        <link href="/css/styles.css" rel="stylesheet" />
+        <link href="../css/styles.css" rel="stylesheet" />
         <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
@@ -29,56 +29,110 @@
                     <div class="sb-sidenav-menu">
                         <div class="nav">
                             <div class="sb-sidenav-menu-heading">Main</div>
-                            <a class="nav-link" href="../panel/pos-panel.php">
+                            <button class="nav-link bg-dark " onclick="getPanel('pos-panel')">
                                 <div class="sb-nav-link-icon"><i class="fas fa-cash-register"></i></div>
-                                Point of Sale 
-                            </a>
-                            <a class="nav-link" href="../panel/bill-panel.php">
+                                Point of Sale
+                            </button>
+                            
+                            <button class="nav-link bg-dark " onclick="getPanel('bill-panel')">
                                 <div class="sb-nav-link-icon"><i class="fas fa-receipt"></i></div>
                                 Bills
-                            </a>
-                            <a class="nav-link" href="../panel/table-panel.php">
+                            </button>
+                            
+                            <button class="nav-link bg-dark " onclick="getPanel('table-panel')">
                                 <div class="sb-nav-link-icon"><i class="fas fa-table-cells"></i></div>
                                 Table
-                            </a>
-                            <a class="nav-link" href="../panel/menu-panel.php">
+                            </button>
+                            
+                            <button class="nav-link bg-dark " onclick="getPanel('menu-panel')">
                                 <div class="sb-nav-link-icon"><i class="fas fa-utensils"></i></div>
                                 Menu
-                            </a>
-                            <a class="nav-link" href="../panel/reservation-panel.php">
+                            </button>
+                            
+                            <button class="nav-link bg-dark " onclick="getPanel('reservation-panel')">
                                 <div class="sb-nav-link-icon"><i class="fas fa-book"></i></div>
                                 Reservations
-                            </a>
-                            <a class="nav-link" href="../panel/customer-panel.php">
+                            </button>
+                            
+                            <button class="nav-link bg-dark " onclick="getPanel('customer-panel')">
                                 <div class="sb-nav-link-icon"><i class="fas fa-person-shelter"></i></div>
                                 Members
-                            </a>
-                            <a class="nav-link" href="../panel/staff-panel.php">
+                            </button>
+                            
+                            <button class="nav-link bg-dark " onclick="getPanel('staff-panel')">
                                 <div class="sb-nav-link-icon"><i class="fas fa-people-group"></i></div>
                                 Staff
-                            </a>
-                            <a class="nav-link" href="../panel/account-panel.php">
+                            </button>
+                            
+                            <button class="nav-link bg-dark " onclick="getPanel('account-panel')">
                                 <div class="sb-nav-link-icon"><i class="fas fa-eye"></i></div>
                                 View All Accounts
-                            </a>
-                            <a class="nav-link" href="../panel/kitchen-panel.php">
+                            </button>
+                            
+                            <button class="nav-link bg-dark " onclick="getPanel('kitchen-panel')">
                                 <div class="sb-nav-link-icon"><i class="fas fa-kitchen-set"></i></div>
                                 Kitchen
-                            </a>
+                            </button>
+
+                            <button class="nav-link bg-dark " onclick="getPanel('admin-panel')">
+                                <div class="sb-nav-link-icon"><i class="fas fa-kitchen-set"></i></div>
+                                Admin
+                            </button>
+                            
                             <div class="sb-sidenav-menu-heading">Report & Analytics</div>
-                            <a class="nav-link" href="../panel/sales-panel.php">
+                            
+                            <button class="nav-link bg-dark " onclick="getPanel('sales-panel')">
                                 <div class="sb-nav-link-icon"><i class="fas fa-fire"></i></div>
                                 Items Sales
-                            </a>
-                            <a class="nav-link" href="../panel/statistics-panel.php">
+                            </button>
+                            
+                            <button class="nav-link bg-dark " onclick="getPanel('statistics-panel')">
                                 <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                                 Revenue Statistics
-                            </a>
-                            <a class="nav-link" href="../panel/profiles-panel.php">
+                            </button>
+                            
+                            <button class="nav-link bg-dark " onclick="getPanel('profiles-panel')">
                                 <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
                                 Member Profiles
-                            </a>
-                            <a class="nav-link" href="../StaffLogin/logout.php">
+                            </button>
+                            
+                            <button class="nav-link bg-dark " onclick="getPanel('logout')">
                                 <div class="sb-nav-link-icon"><i class="fas fa-key"></i></div>
                                 Log out
-                            </a>
+                            </button>
+                            
+                        </div>
+                    </div>
+                </nav>
+            </div>
+            <div id="layoutSidenav_content">
+                <!-- <main>
+                    <div class="container-fluid">
+                        <h1> aslkjfha </h1>
+                    </div>
+                </main> -->
+            </div>
+        </div>
+        
+    </div>
+
+    <script>
+        // Bắt sự kiện click vào các nav-link
+        function getPanel(panel) {
+            fetch(`/dashboard/panel/${panel}`)
+                .then(response => response.text())  // Lấy HTML dưới dạng text
+                .then(html => {
+                    const panelContent = document.getElementById('layoutSidenav_content'); // Chỗ mà bạn muốn hiển thị
+                    panelContent.innerHTML = html; // Hiển thị HTML
+                })
+                .catch(error => {
+                    console.error('Error fetching panel content:', error);
+                });
+        }
+        
+    </script>
+</body>
+</html>
+
+</body>
+</html>
