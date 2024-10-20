@@ -1,12 +1,8 @@
 const express = require("express");
 const authController = require("../controllers/authController");
-
-const validateLogin = require("../validatior/authValidator");
+const staffController = require("../controllers/staffController");
 const router = express.Router();
 
-router.post("/signup", authController.signup);
-
-router.get("/login", authController.getlogin);
-router.post('/login', validateLogin.validateLogin, authController.login);
+router.get("staff", staffController.findByName)
 
 module.exports = router;
