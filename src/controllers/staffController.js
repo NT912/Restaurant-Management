@@ -4,11 +4,11 @@ const DeparmentModel = require("../models/departmentModel")
 const staffController = {
   findByName: async (req, res) => {
     try {
-      console.log("heree");
-      const name = req.query.name ? `%${req.query.name}%` : '%';
-      const department = req.query.department ? req.query.department : '%';
+      const name = req.query.name;
+      const departmentID = req.query.department;
+      const roleID = req.query.role;
 
-      const staffs = StaffModel.findByName(name, department);
+      const staffs = await StaffModel.findByName(name, departmentID, roleID);
       res.json(staffs);
     } catch(err) {
       console.log(err);

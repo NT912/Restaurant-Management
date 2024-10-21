@@ -30,9 +30,11 @@ const FinanceModel = {
     });
   },
   
-
-  calculateDailyRevenueAndCustomers: () => {
+  calculateDailyRevenueAndCustomers: (date) => {
     return new Promise((resolve, reject) => {
+      const queryDate = date ? `'${date}'` : 'CURDATE()';
+      const startDate = date ? `'${date}' - INTERVAL 12 DAY` : 'CURDATE() - INTERVAL 12 DAY';
+  
       const query = `
         SELECT 
           DATE(b.Time) as Date, 
@@ -45,8 +47,8 @@ const FinanceModel = {
         ON 
           b.TableID = t.TableID
         WHERE 
-          b.Time >= CURDATE() - INTERVAL 12 DAY
-          AND b.Time < CURDATE() + INTERVAL 1 DAY
+          b.Time >= ${startDate}
+          AND b.Time < ${queryDate} + INTERVAL 1 DAY
         GROUP BY 
           DATE(b.Time)
         ORDER BY 
@@ -59,6 +61,7 @@ const FinanceModel = {
       });
     });
   },
+  
 
   calculateWeeklyRevenueAndCustomers: () => {
     return new Promise((resolve, reject) => {

@@ -18,16 +18,13 @@ const adminController = {
         const date = req.query.date; 
 
         const revenue = await FinanceModel.calculateDayRevenueCustomer(date)
-        res.render('panel/admin/admin', { employees: employees, panel: 'main', revenue: revenue});
+        res.render('panel/admin/admin', { panel: 'main', revenue: revenue});
       }
       
     } catch(err) {
       console.log(err);
     }
   }
-
-
-
 };
 
 module.exports = adminController;

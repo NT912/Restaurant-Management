@@ -1,14 +1,19 @@
 function fileterEmpleyee() {
     const searchName = document.getElementById('searchInput').value.trim(); 
     const filterDepartment = document.getElementById('filterDepartment').value; 
+    const filterRole = document.getElementById('filterRole').value; 
 
-    const apiUrl = `/api/auth/staff?name=${searchName}` + (filterDepartment ? `&department=${filterDepartment}` : '');
+    // if (!searchName && !filterDepartment && !filterRole) return
+
+    const apiUrl = `/api/auth/staff?` + (searchName ? `&name=${searchName}` : '') + (filterDepartment ? `&department=${filterDepartment}` : '') + (filterRole ? `&role=${filterRole}` : '');
 
     axios.get(apiUrl)
         .then(response => {
+            console.log(response);
             const data = response.data;
             const tableBody = document.getElementById('employeeTableBody');
             tableBody.innerHTML = ''; 
+            console.log(data);
 
             if (data.length === 0) {
                 tableBody.innerHTML = '<tr><td colspan="7" class="text-center">No employees found</td></tr>';
@@ -37,7 +42,7 @@ function fileterEmpleyee() {
                                data-name="${employee.Name}"
                                data-role="${employee.roleName}"
                                data-department="${employee.departmentName}"
-                               data-phone="${employee.PhoneNumber}"
+                               data-phone="${employee.PhoneNumber}" 
                                onclick="OnShowEditAccount(this)">
                                <i class="bi bi-pencil-square"></i>
                             </a>
@@ -59,18 +64,24 @@ function fileterEmpleyee() {
 
 
 
-function getPanelOfAdmin(panel) {
-    axios.get(`/dashboard/panel/admin-panel?name=${panel}`)
+function getPanelOfAdmin(panel, date) {
+    const url = `/dashboard/panel/admin-panel?name=${panel}` + (date ? `&date=${date}` : '');
+    axios.get(url)
         .then(response => {
             const panelContent = document.getElementById('layoutSidenav_content');
             panelContent.innerHTML = response.data;
             if (panel == 'main') {
-                LoadChart();
+                LoadChart('daily', date);
             }
         })
         .catch(error => {
             console.error('Error fetching panel content:', error);
         });
+}
+
+function refreshPanelMain() {
+    const selectedDate = document.getElementById('selectedDate').value; 
+    getPanelOfAdmin('main', selectedDate); 
 }
 
 
@@ -109,11 +120,14 @@ function OnShowViewDetailAccount(button) {
 function OnShowEditAccount(button) {
     const modalEdit = document.getElementById('employeeEditModal');
 
+    var id = button.getAttribute('data-id');
+    console.log(id);
     var name = button.getAttribute('data-name');
     var role = button.getAttribute('data-role');
     var department = button.getAttribute('data-department');
     var phone = button.getAttribute('data-phone');
 
+    document.getElementById('editEmployeeID').value = id;
     document.getElementById('editEmployeeName').value = name;
     document.getElementById('editEmployeeRole').value = role;
     document.getElementById('editEmployeeDepartment').value = department;
@@ -123,21 +137,32 @@ function OnShowEditAccount(button) {
     modal.show();
 }
 
-function OnShowEditAccount(button) {
-    const modalEdit = document.getElementById('employeeEditModal');
+function confirmUpdateAccount()
+{
+    var id = document.getElementById('editEmployeeID').value;
+    var name = document.getElementById('editEmployeeName').value;
+    var role = document.getElementById('editEmployeeRole').value;
+    var department = ocument.getElementById('editEmployeeDepartment').value;
+    var phone = document.getElementById('editEmployeePhone').value;
 
-    var name = button.getAttribute('data-name');
-    var role = button.getAttribute('data-role');
-    var department = button.getAttribute('data-department');
-    var phone = button.getAttribute('data-phone');
+    axios.post('/api/auth/staff/update', {
+        id: id, 
+        name: name,
+        roleId: role, 
+        departmentId: department, 
+        phone: phone
+    })
+    .then(function (response) {
+        console.log('Employee updated successfully', response.data);
+        var modalEdit = new bootstrap.Modal(document.getElementById('employeeEditModal'));
+        modalEdit.hide();
 
-    document.getElementById('editEmployeeName').value = name;
-    document.getElementById('editEmployeeRole').value = role;
-    document.getElementById('editEmployeeDepartment').value = department;
-    document.getElementById('editEmployeePhone').value = phone;
-    var modal = new bootstrap.Modal(modalEdit);
-    
-    modal.show();
+        location.reload(); 
+    })
+    .catch(function (error) {
+        console.error('Error updating employee:', error);
+        alert('Failed to update employee details. Please try again.');
+    });
 }
 
 function OnShowDeleteAccount(button) {
@@ -154,8 +179,10 @@ function OnShowDeleteAccount(button) {
     modal.show();
 }
 
-function LoadChart(type) {
+function LoadChart(type, date) {
     let titleText = '';
+
+    date = document.getElementById('selectedDate').value; 
 
     document.getElementById('daily-btn').classList.remove('active');
     document.getElementById('weekly-btn').classList.remove('active');
@@ -174,29 +201,25 @@ function LoadChart(type) {
         return;
     }
 
-    axios.get(`/api/finance/chart?name=${type}`)
+    const url = `/api/finance/chart?name=${type}` + (date ? `&date=${date}` : date); 
+    axios.get(url)
         .then(response => {
             const data = response.data.result;
             
-            // Check if data is present
             if (!data || data.length === 0) {
                 console.error('No data available.');
                 return;
             }
 
-            // Prepare data for the chart
             const revenueData = data.map(item => Math.round(item.TotalRevenue));
             const customerCountData = data.map(item => item.TotalCustomers);
 
-            // Format the date data appropriately for the chart
             const dateData = data.map((item, index) => {
                 const date = new Date(item.Date);
                 
-                // Adjust date formatting based on type
                 if (type === 'daily') {
                     return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
                 } else if (type === 'weekly') {
-                    // Label weeks as 'This Week', '1 Week Ago', '2 Weeks Ago', etc.
                     if (index === 0) {
                         return 'This Week';
                     } else {
