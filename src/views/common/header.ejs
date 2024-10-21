@@ -8,12 +8,20 @@
         <meta name="author" content="" />
         <title>Dashboard - SB Admin</title>
         <link href="../css/styles.css" rel="stylesheet" />
+        <link rel="stylesheet" type="text/css" href="./css/309.8cc0b238.chunk.css">
+        <link rel="stylesheet" type="text/css" href="./css/3411.578a27c5.chunk.css">
+        <link rel="stylesheet" type="text/css" href="./css/6917.ff4f7cea.chunk.css">
+        <link rel="stylesheet" type="text/css" href="./css/main.d0164ab2.css">
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> 
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
+        <script src="./script/admin.js"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+        <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+          
     </head>
     <body class="sb-nav-fixed">
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
@@ -106,33 +114,9 @@
                 </nav>
             </div>
             <div id="layoutSidenav_content">
-                <!-- <main>
-                    <div class="container-fluid">
-                        <h1> aslkjfha </h1>
-                    </div>
-                </main> -->
+                <!-- Cho ni bo may cai panel vo -->
             </div>
         </div>
         
     </div>
 
-    <script>
-        // Bắt sự kiện click vào các nav-link
-        function getPanel(panel) {
-            fetch(`/dashboard/panel/${panel}`)
-                .then(response => response.text())  // Lấy HTML dưới dạng text
-                .then(html => {
-                    const panelContent = document.getElementById('layoutSidenav_content'); // Chỗ mà bạn muốn hiển thị
-                    panelContent.innerHTML = html; // Hiển thị HTML
-                })
-                .catch(error => {
-                    console.error('Error fetching panel content:', error);
-                });
-        }
-        
-    </script>
-</body>
-</html>
-
-</body>
-</html>

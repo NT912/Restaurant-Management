@@ -1,0 +1,41 @@
+<div class="border border-primary rounded">
+    <div class="border border-primary">
+    <div class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col">
+                    <div class="page-title-box">
+                        <h3 class="page-title">Admin Dashboard</h3>
+                    </div>
+                </div>
+            </div>
+
+            <nav class="navbar navbar-expand-lg navbar-light">
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <div class="navbar-nav ml-auto">
+                        <button class="btn btn-light btn-block <%= panel === 'main' ? 'active' : '' %> border" onclick="getPanelOfAdmin('main')">
+                            Main
+                        </button>
+                        <button class="btn btn-light btn-block <%= panel === 'account' ? 'active' : '' %> border" onclick="getPanelOfAdmin('account')">
+                            Account
+                        </button>
+                    </div>
+                </div>
+            </nav>
+
+            <div class="border border-primary rounded p-1">
+
+                <% if (panel === 'account') { %>
+                    <%- include('account') %>
+                <% } else 
+                 if (panel === 'main') { %>
+                    <%- include('analyst') %>
+                <% } %>
+                  
+            </div>
+        </div>
+    </div>
+</div>

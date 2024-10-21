@@ -37,7 +37,7 @@ const StaffModel = {
         `;
       db.query(query, (err, result) => {
         if (err) return reject(err);
-        resolve(result); // Trả về tất cả các nhân viên
+        resolve(result); 
       });
     });
   }

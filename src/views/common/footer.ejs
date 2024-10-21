@@ -1,0 +1,29 @@
+<script>
+    function getPanel(panel) {
+        axios.get(`/dashboard/panel/${panel}`)
+            .then(response => {
+                const panelContent = document.getElementById('layoutSidenav_content');
+                panelContent.innerHTML = response.data; 
+                if (panel == 'admin-panel'){
+                    LoadChart('daily');
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching panel content:', error);
+            });
+
+            const buttons = document.querySelectorAll('.nav-link');
+            buttons.forEach(button => {
+                if (button.getAttribute('onclick').includes(panel)) {
+                    button.classList.add('active');
+                } else {
+                    button.classList.remove('active'); 
+                }
+            });
+    }
+</script>
+</body>
+</html>
+
+</body>
+</html>
