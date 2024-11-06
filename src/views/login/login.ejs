@@ -75,7 +75,6 @@
                 if (data.message === "Login successful") {
                     window.location.href = '/dashboard';
                 } else {
-                    console,log("here");
                     loginError.textContent = data.message || 'Invalid username or password';
                     loginError.classList.remove('d-none');
                 }

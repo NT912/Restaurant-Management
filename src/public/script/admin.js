@@ -84,23 +84,65 @@ function refreshPanelMain() {
     getPanelOfAdmin('main', selectedDate); 
 }
 
-
 function submitCreateAccountForm() {
     const accountName = document.getElementById('accountName').value;
-    const accountRole = document.getElementById('accountRole').value;
+    const accountUserName = document.getElementById('accountUserName').value;
+    const accountRole = document.getElementById('addEmployeeRole').value;
     const accountPhone = document.getElementById('accountPhone').value;
     const accountPassword = document.getElementById('accountPassword').value;
-
-    console.log("Account Name:", accountName);
-    console.log("Account Role:", accountRole);
-    console.log("Account Phone:", accountPhone);
-    console.log("Account Password:", accountPassword);
-
-    $('#addAccountModal').modal('hide');
     
-    document.getElementById('addAccountForm').reset();
+    // Validation (You can add more validation if needed)
+    if (!accountName || !accountRole || !accountPassword || !accountUserName) {
+        toastr.error('Please fill out all required fields.');
+        return;
+    }
 
+    // Prepare data to send
+    const data = {
+        name: accountName,
+        username: accountUserName,
+        roleId: accountRole,
+        phone: accountPhone,
+        password: accountPassword
+    };
+
+    axios.post('/api/auth/staff/create', data)
+        .then(function (response) {
+            toastr.success('Account created successfully!');
+
+            var modal = bootstrap.Modal.getInstance(document.getElementById('addAccountModal'));
+            modal.hide();
+
+            document.getElementById('addAccountForm').reset();
+        })
+        .catch(function (error) {
+            toastr.error('Failed to create account. Please try again.');
+            console.error('Error creating account:', error);
+        });
 }
+
+function updateRoleAddAccount() {
+    const selectedRoleId = document.getElementById('addEmployeeRole').value; 
+
+    axios.get(`/api/department/getDepartmentByRole/${selectedRoleId}`)
+        .then(function (response) {
+            const department = response.data;
+
+            const departmentSelect = document.getElementById('addEmployeeDepartment'); 
+            departmentSelect.disabled = false; 
+
+            for (let i = 0; i < departmentSelect.options.length; i++) {
+                if (departmentSelect.options[i].value == department.DepartmentID) {
+                    departmentSelect.selectedIndex = i; 
+                    break;
+                }
+            }
+        })
+        .catch(function (error) {
+            console.error('Error fetching departments:', error);
+        });
+}
+
 
 function OnShowViewDetailAccount(button) {
     var modalDetail = document.getElementById('employeeDetailModal');
@@ -121,7 +163,6 @@ function OnShowEditAccount(button) {
     const modalEdit = document.getElementById('employeeEditModal');
 
     var id = button.getAttribute('data-id');
-    console.log(id);
     var name = button.getAttribute('data-name');
     var role = button.getAttribute('data-role');
     var department = button.getAttribute('data-department');
@@ -137,12 +178,34 @@ function OnShowEditAccount(button) {
     modal.show();
 }
 
+function updateRoleEditAccount() {
+    const selectedRoleId = document.getElementById('editEmployeeRole').value;
+
+    axios.get(`/api/department/getDepartmentByRole/${selectedRoleId}`)
+        .then(function (response) {
+            const department = response.data;
+            console.log(department);
+
+            const departmentSelect = document.getElementById('editEmployeeDepartment');
+
+            for (let i = 0; i < departmentSelect.options.length; i++) {
+                if (departmentSelect.options[i].value == department.DepartmentID) {
+                    departmentSelect.selectedIndex = i; // Set the department as selected
+                    break;
+                }
+            }
+        })
+        .catch(function (error) {
+            console.error('Error fetching departments:', error);
+        });
+}
+
 function confirmUpdateAccount()
 {
     var id = document.getElementById('editEmployeeID').value;
     var name = document.getElementById('editEmployeeName').value;
     var role = document.getElementById('editEmployeeRole').value;
-    var department = ocument.getElementById('editEmployeeDepartment').value;
+    var department = document.getElementById('editEmployeeDepartment').value;
     var phone = document.getElementById('editEmployeePhone').value;
 
     axios.post('/api/auth/staff/update', {
@@ -153,15 +216,16 @@ function confirmUpdateAccount()
         phone: phone
     })
     .then(function (response) {
-        console.log('Employee updated successfully', response.data);
-        var modalEdit = new bootstrap.Modal(document.getElementById('employeeEditModal'));
-        modalEdit.hide();
+        toastr.success('Employee updated successfully!');
 
-        location.reload(); 
+        var modalEdit = document.getElementById('employeeEditModal');
+        var modal = bootstrap.Modal.getInstance(modalEdit); 
+        if (modal) {
+            modal.hide(); 
+        }
     })
     .catch(function (error) {
-        console.error('Error updating employee:', error);
-        alert('Failed to update employee details. Please try again.');
+        toastr.error('Employee updated failed!');
     });
 }
 
@@ -172,11 +236,34 @@ function OnShowDeleteAccount(button) {
     const accountId = button.getAttribute('data-id');
 
     document.getElementById('deleteAccountName').textContent = accountName;
-    document.getElementById('confirmDelete').setAttribute('data-id', accountId);
+    document.getElementById('deleteEmployeeID').value = accountId;
+    console.log(document.getElementById('deleteEmployeeID').value);
 
     var modal = new bootstrap.Modal(modalDelete);
     
     modal.show();
+}
+
+function confirmDeleteAccount()
+{
+    var accountId = document.getElementById('deleteEmployeeID').value;
+
+    console.log(accountId);
+    axios.post('/api/auth/staff/delete', {
+        accountId: accountId, 
+    })
+    .then(function (response) {
+        toastr.success('Employee deleted successfully!');
+
+        var modalDelete = document.getElementById('deleteAccountModal');
+        var modal = bootstrap.Modal.getInstance(modalDelete); 
+        if (modal) {
+            modal.hide(); 
+        }
+    })
+    .catch(function (error) {
+        toastr.error('Employee deleted failed!');
+    });
 }
 
 function LoadChart(type, date) {
@@ -286,11 +373,10 @@ function LoadChart(type, date) {
                 },
                 dataLabels: {
                     enabled: true,
-                    enabledOnSeries: [1] // Enables labels only for the 'Customers' series
+                    enabledOnSeries: [1] 
                 }
             };
 
-            // Render the chart with the updated options
             var chart = new ApexCharts(chartElement, options);
             chart.render();
         })
@@ -298,82 +384,3 @@ function LoadChart(type, date) {
             console.error('Error fetching panel content:', error);
         });
 }
-
-
-
-
-// function LoadChart(type) {
-//     axios.get(`/api/finance/chart?name=${type}`)
-//         .then(response => {
-//             const data = response.data.result;
-          
-//               const revenueData = data.map(item => Math.round(item.TotalRevenue));
-//               const customerCountData = data.map(item => item.TotalCustomers); 
-//               const dateData = data.map(item => {
-//                 const date = new Date(item.Date);
-//                 return date.toLocaleDateString('en-US', {
-//                   month: 'short', day: 'numeric'
-//                 });
-//               });
-          
-//               const chartElement = document.querySelector("#salesAnalyticsChart");
-//               if (!chartElement) {
-//                 console.error("Element #salesAnalyticsChart not found");
-//                 return;
-//               }
-
-//             var options = {
-//                 chart: {
-//                   height: 350,
-//                   type: 'line',
-//                   stacked: false
-//                 },
-//                 series: [{
-//                   name: 'Total Revenue',
-//                   type: 'column',
-//                   data: revenueData
-//                 }, {
-//                   name: 'Customers',
-//                   type: 'line',
-//                   data: customerCountData
-//                 }],
-//                 xaxis: {
-//                   categories: dateData
-//                 },
-//                 yaxis: [{
-//                   title: {
-//                     text: 'Revenue (in USD)'
-//                   },
-//                   labels: {
-//                     formatter: function(value) {
-//                       return '$' + Math.round(value).toLocaleString();
-//                     }
-//                   }
-//                 }, {
-//                   opposite: true,
-//                   title: {
-//                     text: 'Number of Customers'
-//                   }
-//                 }],
-//                 title: {
-//                   text: 'Total Revenue and Number of Customers per Day',
-//                   align: 'center'
-//                 },
-//                 markers: {
-//                   size: 4
-//                 },
-//                 dataLabels: {
-//                   enabled: true,
-//                   enabledOnSeries: [1] // Enables labels only for the 'Customers' series
-//                 }
-//               };
-          
-//               var chart = new ApexCharts(chartElement, options);
-//               chart.render();
-//         })
-//         .catch(error => {
-//             console.error('Error fetching panel content:', error);
-//         });
-// }
-
-

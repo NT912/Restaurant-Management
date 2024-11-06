@@ -9,6 +9,7 @@ const authRoutes = require("./routes/authRoutes");
 const reservationRoutes = require("./routes/reservationRoutes");
 const tableRoutes = require("./routes/tableRoutes");
 const finaceRoute = require("./routes/financeRoute");
+const departmentRoutes = require("./routes/departmentRoutes");
 
 const app = express();
 
@@ -41,6 +42,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/reservations", reservationRoutes);
 app.use("/api/tables", tableRoutes);
 app.use("/api/finance", finaceRoute);
+app.use("/api/department", departmentRoutes);
 
 // Start server
 const PORT = 3003;

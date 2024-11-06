@@ -1,20 +1,67 @@
 const db = require("../config/db");
 
 const StaffModel = {
-  findByUserName: (userNam) => {
+  findByNameLogin: (Name) => {
     return new Promise((resolve, reject) => {
-      const query = `SELECT * FROM staff WHERE userName = ?`;
-      db.query(query, [userNam], (err, result) => {
+      let query = `
+        SELECT s.Password
+        FROM staff s
+        WHERE s.username = ?
+      `;
+  
+      const params = [Name]; 
+  
+      db.query(query, params, (err, result) => {
         if (err) return reject(err);
         resolve(result[0]);
       });
-    })
+    });
+  },
+
+  createStaff: (Name, username, RoleID, PhoneNumber, Password) => {
+      return new Promise((resolve, reject) => {
+          const query = `
+              INSERT INTO staff (Name, username, RoleID, PhoneNumber, Password) 
+              VALUES (?, ?, ?, ?, ?)
+          `;
+
+          db.query(query, [Name, username, RoleID, PhoneNumber, Password], (err, result) => {
+              if (err) return reject(err);
+              resolve(result);
+          });
+      });
+  },
+  
+  updateStaff: (id, name, roleId, phone) => {
+    return new Promise((resolve, reject) => {
+      const query = `
+        UPDATE staff 
+        SET Name = ?, RoleID = ?, PhoneNumber = ?
+        WHERE StaffID = ?
+      `;
+      const params = [name, roleId, phone, id];
+
+      db.query(query, params, (err, result) => {
+        if (err) return reject(err);
+        resolve(result);
+      });
+    });
+  },
+
+  deleteById: (id) => {
+    return new Promise((resolve, reject) => {
+        const query = 'DELETE FROM staff WHERE StaffID = ?';
+        db.query(query, [id], (err, result) => {
+            if (err) return reject(err);
+            resolve(result);
+        });
+    });
   },
 
   findByName: (Name, departmentID, roleID) => {
     return new Promise((resolve, reject) => {
       let query = `
-        SELECT s.Name, r.Name as roleName, d.Name as departmentName, s.PhoneNumber, d.Icon as departmentIcon
+        SELECT s.StaffID, s.Name, r.Name as roleName, s.Status, r.RoleID, d.Name as departmentName, d.DepartmentID, d.Icon as departmentIcon, s.PhoneNumber
         FROM staff s
         JOIN role r ON s.RoleID = r.RoleID
         JOIN department d ON r.DepartmentID = d.DepartmentID
@@ -48,10 +95,11 @@ const StaffModel = {
   getAllStaff: () => {
     return new Promise((resolve, reject) => {
       const query = ` 
-        SELECT s.StaffID, s.Name, r.Name as roleName, r.RoleID, d.Name as departmentName, d.DepartmentID, d.Icon as departmentIcon, s.PhoneNumber
+        SELECT s.StaffID, s.Name, r.Name as roleName, s.Status, r.RoleID, d.Name as departmentName, d.DepartmentID, d.Icon as departmentIcon, s.PhoneNumber
         FROM staff s
         JOIN role r ON s.RoleID = r.RoleID
         JOIN department d ON r.DepartmentID = d.DepartmentID
+        WHERE r.Name != 'Admin'
         `;
       db.query(query, (err, result) => {
         if (err) return reject(err);

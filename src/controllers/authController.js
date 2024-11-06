@@ -37,7 +37,7 @@ login: async (req, res) => {
   const { userName, password } = req.body;
 
   try {
-    const user = await StaffModel.findByUserName(userName);
+    const user = await StaffModel.findByNameLogin(userName);
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
